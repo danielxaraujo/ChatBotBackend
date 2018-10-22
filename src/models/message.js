@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const User = require('./user')
 
 const messageSchema = new mongoose.Schema({
 	sessionId: {
@@ -7,14 +8,22 @@ const messageSchema = new mongoose.Schema({
 	},
 	text: {
 		type: String,
-		required: true
+		required: false
 	},
 	createdAt: {
 		type: Date,
 		required: true
 	},
-	createdFor: {
-		type: String,
+	user: {
+		type: User.schema,
+		required: false
+	},
+	sent: {
+		type: Boolean,
+		required: false
+	},
+	received: {
+		type: Boolean,
 		required: false
 	}
 })

@@ -4,7 +4,7 @@ const tunnel = require('tunnel')
 const { respondSuccess, respondErr } = require('../utils/responseUtils')
 const { messageService } = require('../services')
 
-const BOOT_ID = 1
+const BOOT_ID = '5bce2c664d5eae61d4bb6a59'
 
 const agent = tunnel.httpsOverHttp({
     proxy: {
@@ -21,14 +21,14 @@ const axiosClient = axios.create({
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-    messageService.selectCurrent()
+router.get('/old/:sessionId', (req, res) => {
+    messageService.selectOld(req.params.sessionId || '')
         .then(result => respondSuccess(res, 200, result))
         .catch(err => respondErr(res, 500, err))
 })
 
-router.get('/old', (req, res) => {
-    messageService.selectOld()
+router.get('/current/:sessionId', (req, res) => {
+    messageService.selectCurrent(req.params.sessionId || '')
         .then(result => respondSuccess(res, 200, result))
         .catch(err => respondErr(res, 500, err))
 })
@@ -46,29 +46,27 @@ router.delete('/:chatId', (req, res) => {
         .catch(err => respondErr(res, 500, err))
 })
 
-router.post('/chatbot', (req, res) => {
+router.post('/chatbot', async (req, res) => {
 
     let baseURL = '/';
     let token = '248f1c49d93b4c2c9114d3259e888817';
 
-    messageService.insert({
+    const userMessage = await messageService.insert({
+        userId: req.body.userId,
         sessionId: req.body.context.sessionId,
         text: req.body.context.query,
         createdAt: new Date(),
-        createdFor: req.body.createdFor
     })
 
-    axiosClient.post(baseURL, req.body.context, { headers: { Authorization: `Bearer ${token}` } })
-        .then(response => {
-            messageService.insert({
-                sessionId: response.data.sessionId,
-                text: response.data.result.fulfillment.messages[0].speech,
-                createdAt: new Date(),
-                createdFor: BOOT_ID
-            })
-            respondSuccess(res, 200, response.data)
+    axiosClient.post(baseURL, req.body.context, { headers: { Authorization: `Bearer ${token}` } }).then(async response => {
+        const systemMessage = await messageService.insert({
+            userId: BOOT_ID,
+            sessionId: response.data.sessionId,
+            text: response.data.result.fulfillment.messages[0].speech,
+            createdAt: new Date(),
         })
-        .catch(err => respondErr(res, 500, err))
+        respondSuccess(res, 200, { context: response.data, messages: [systemMessage, userMessage] })
+    }).catch(err => respondErr(res, 500, err))
 })
 
 exports = module.exports = router

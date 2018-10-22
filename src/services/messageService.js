@@ -1,9 +1,11 @@
 const moment = require('moment')
+const userService = require('./userService')
 const { Message } = require('../models')
 
-const selectCurrent = () => {
+const selectCurrent = sessionId => {
     let date = moment().startOf('day').toDate();
     return Message.find({
+        sessionId,
         createdAt: {
             $gte: date
         }
@@ -12,9 +14,10 @@ const selectCurrent = () => {
     })
 }
 
-const selectOld = () => {
+const selectOld = sessionId => {
     let date = moment().startOf('day').toDate();
     return Message.find({
+        sessionId,
         createdAt: {
             $lte: date
         }
@@ -23,12 +26,15 @@ const selectOld = () => {
     })
 }
 
-const insert = message => {
+const insert = async message => {
+    const user = await userService.findById(message.userId)
     return Message.create({
         sessionId: message.sessionId,
         text: message.text,
         createdAt: message.createdAt,
-        createdFor: message.createdFor
+        user: user,
+        sent: true,
+        received: true
     })
 }
 
@@ -36,4 +42,4 @@ const remove = async (sessionId) => {
     return await Message.deleteMany({ sessionId })
 }
 
-module.exports = { selectCurrent, selectOld, insert, remove}
+module.exports = { selectCurrent, selectOld, insert, remove }

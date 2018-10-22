@@ -1,5 +1,9 @@
 const { User } = require('../models')
 
+const findById = id => {
+    return User.findById(id)
+}
+
 const findByUsername = name => {
     return User.findOne({ name: name})
 }
@@ -9,4 +13,4 @@ const insert = async (user) => {
     return user
 }
 
-module.exports = { findByUsername, insert }
+module.exports = { findById, findByUsername, insert }

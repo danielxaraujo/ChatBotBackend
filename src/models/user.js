@@ -9,9 +9,15 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
+/*
 	password: {
 		type: String,
-		required: true
+		required: false
+	},
+*/
+	avatar: {
+		type: String,
+		required: false
 	}
 })
 
