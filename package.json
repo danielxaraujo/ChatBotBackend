@@ -16,9 +16,7 @@
 		"jsonwebtoken": "^8.3.0",
 		"moment": "2.22.2",
 		"mongoose": "^5.2.17",
-		"tunnel": "^0.0.6"
-	},
-	"devDependencies": {
+		"tunnel": "^0.0.6",
 		"nodemon": "^1.18.4"
 	}
 }
