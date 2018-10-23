@@ -63,14 +63,17 @@ router.post('/chatbot', async (req, res) => {
     })
 
     axiosClient.post(baseURL, data, { headers: { Authorization: `Bearer ${token}` } }).then(async response => {
-        console.log('chegou aqui')
         const systemMessage = await messageService.insert({
             userId: BOOT_ID,
             sessionId: response.data.sessionId,
             text: response.data.result.fulfillment.messages[0].speech,
             createdAt: new Date(),
         })
-        respondSuccess(res, 200, { context: response.data, userMessages: { tempId, _id: userMessage._id }, systemMessage })
+        respondSuccess(res, 200, {
+            data: response.data,
+            userMessageId: userMessage._id,
+            systemMessage
+        })
     }).catch(err => respondErr(res, 500, err))
 })
 
