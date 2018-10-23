@@ -11,7 +11,7 @@ const agent = tunnel.httpsOverHttp({
         host: '127.0.0.1',
         port: 3128,
     },
-});
+})
 
 const axiosClient = axios.create({
     baseURL: 'https://api.dialogflow.com/v1/query?v=20150910:443',
@@ -48,8 +48,8 @@ router.delete('/:chatId', (req, res) => {
 
 router.post('/chatbot', async (req, res) => {
 
-    let baseURL = '/';
-    let token = '248f1c49d93b4c2c9114d3259e888817';
+    let baseURL = '/'
+    let token = '248f1c49d93b4c2c9114d3259e888817'
 
     const userMessage = await messageService.insert({
         userId: req.body.userId,

@@ -3,7 +3,7 @@ const userService = require('./userService')
 const { Message } = require('../models')
 
 const selectCurrent = sessionId => {
-    let date = moment().startOf('day').toDate();
+    let date = moment().startOf('day').toDate()
     return Message.find({
         sessionId,
         createdAt: {
@@ -15,7 +15,7 @@ const selectCurrent = sessionId => {
 }
 
 const selectOld = sessionId => {
-    let date = moment().startOf('day').toDate();
+    let date = moment().startOf('day').toDate()
     return Message.find({
         sessionId,
         createdAt: {
