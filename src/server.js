@@ -21,7 +21,7 @@ server.use('/api', routes.api)
 const port = process.env.PORT || 3001
 server.listen(port, () => {
 	console.log(`BACKEND is running on port ${port}.`)
-	mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true }).then(() => {
+	mongoose.connect(process.env.MONGODB_URI || process.env.DATABASE_URI, { useNewUrlParser: true }).then(() => {
 		console.log('DATABASE is running!!!')
 	})
 })
