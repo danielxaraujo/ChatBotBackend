@@ -53,7 +53,6 @@ router.post('/chatbot', async (req, res) => {
 
     let data = req.body.data || {}
     let userId = req.body.userId || ''
-    let tempId = req.body.tempId || ''
 
     const userMessage = await messageService.insert({
         userId: userId,
